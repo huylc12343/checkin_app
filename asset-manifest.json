@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/checkin_app/static/css/main.cea294d3.css",
+    "main.js": "/checkin_app/static/js/main.08516e9e.js",
+    "static/js/453.7f216597.chunk.js": "/checkin_app/static/js/453.7f216597.chunk.js",
+    "index.html": "/checkin_app/index.html",
+    "main.cea294d3.css.map": "/checkin_app/static/css/main.cea294d3.css.map",
+    "main.08516e9e.js.map": "/checkin_app/static/js/main.08516e9e.js.map",
+    "453.7f216597.chunk.js.map": "/checkin_app/static/js/453.7f216597.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cea294d3.css",
+    "static/js/main.08516e9e.js"
+  ]
+}
