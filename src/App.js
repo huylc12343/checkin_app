@@ -3,8 +3,7 @@ import QrScanner from "./components/qr_reader/qr_reader";
 
 function App() {
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>📌 Ứng dụng đọc QR Code</h1>
+    <div style={{ padding: "10px" }}>
       <QrScanner />
       {/* <QrReaderFromImage /> */}
     </div>
