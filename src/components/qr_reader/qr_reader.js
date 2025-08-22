@@ -56,11 +56,6 @@ export default function QrScannerBox({ onDetected }) {
         }}
       ></div>
 
-      {code && (
-        <p className="mt-2 text-center text-green-700 font-semibold">
-          ✅ Đã quét: {code}
-        </p>
-      )}
     </div>
   );
 }
