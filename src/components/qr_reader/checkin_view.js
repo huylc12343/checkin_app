@@ -1,12 +1,14 @@
 // CheckinView.jsx
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import TicketResult from "./ticket_result";
-import QrScannerBox from "./qr_reader"; // import trực tiếp modal
+import QrScannerBox from "./qr_reader";
+import { Html5Qrcode } from "html5-qrcode"; // thêm import
 const API_BASE_URL = "http://localhost:8000";
 
 export default function CheckinView() {
   const [orderCode, setOrderCode] = useState("");
   const [result, setResult] = useState(null);
+  const fileInputRef = useRef(null);
 
   async function searchTicket() {
     if (!orderCode.trim()) {
@@ -42,6 +44,23 @@ export default function CheckinView() {
     }
   }
 
+  // ✅ Hàm xử lý khi người dùng chọn file ảnh
+  const handleFileSelected = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const scanner = new Html5Qrcode("qr-file-scanner"); // tạo scanner tạm
+    try {
+      const decodedText = await scanner.scanFile(file, true);
+      setOrderCode(decodedText); // gán vào input
+      setResult({ type: "success"
+});
+    } catch (err) {
+      setResult({ type: "error", message: "Không đọc được QR từ ảnh." });
+      console.error("Scan failed", err);
+    }
+  };
+
   return (
     <div className="container mx-auto max-w-lg p-4 bg-white shadow rounded">
       <h1 className="text-center text-blue-700 text-2xl font-bold mb-4">
@@ -51,7 +70,6 @@ export default function CheckinView() {
       {/* ✅ Khung quét QR đặt trên input */}
       <div className="mb-6">
         <QrScannerBox onDetected={(code) => setOrderCode(code)} />
-
       </div>
 
       {/* Ô nhập mã vé */}
@@ -66,15 +84,23 @@ export default function CheckinView() {
             className="flex-grow p-2 border border-gray-300 rounded-lg text-lg font-bold text-blue-700"
           />
           <button
-            onClick={() => document.getElementById("qr-file-input").click()}
+            onClick={() => fileInputRef.current.click()}
             className="bg-gray-600 text-white w-12 h-12 rounded-lg text-xl"
           >
             📁
           </button>
-          <input id="qr-file-input" type="file" accept="image/*" hidden />
+          <input
+            id="qr-file-input"
+            type="file"
+            accept="image/*"
+            hidden
+            ref={fileInputRef}
+            onChange={handleFileSelected} // ✅ xử lý khi chọn file
+          />
         </div>
       </div>
 
+      {/* Nút tra cứu */}
       <button
         onClick={searchTicket}
         className="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700"
@@ -82,11 +108,21 @@ export default function CheckinView() {
         Tra cứu vé
       </button>
 
+      {/* ✅ Nút xác nhận checkin */}
+      <button
+        className="w-full mt-2 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700"
+      >
+        ✅ Xác nhận Check-in
+      </button>
+
       {result && (
         <div className="mt-4">
           <TicketResult result={result} onCheckIn={confirmCheckIn} />
         </div>
       )}
+
+      {/* ✅ scanner tạm để đọc QR từ file (ẩn) */}
+      <div id="qr-file-scanner" style={{ display: "none" }}></div>
     </div>
   );
 }
