@@ -13,7 +13,7 @@ export default function QrScannerBox({ onDetected }) {
     scannerRef.current
       .start(
         { facingMode: "environment" }, 
-        { fps: 10, qrbox: { width: 250, height: 250 } }, // ✅ khung quét vuông
+        { fps: 10 }, // ✅ khung quét vuông
         (decodedText) => {
           setCode(decodedText);
           if (onDetected) onDetected(decodedText);
