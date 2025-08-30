@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/checkin_app/static/css/main.729cfe1e.css",
-    "main.js": "/checkin_app/static/js/main.36958917.js",
+    "main.css": "/checkin_app/static/css/main.375e9b9a.css",
+    "main.js": "/checkin_app/static/js/main.47951439.js",
     "static/js/453.7f216597.chunk.js": "/checkin_app/static/js/453.7f216597.chunk.js",
     "index.html": "/checkin_app/index.html",
-    "main.729cfe1e.css.map": "/checkin_app/static/css/main.729cfe1e.css.map",
-    "main.36958917.js.map": "/checkin_app/static/js/main.36958917.js.map",
+    "main.375e9b9a.css.map": "/checkin_app/static/css/main.375e9b9a.css.map",
+    "main.47951439.js.map": "/checkin_app/static/js/main.47951439.js.map",
     "453.7f216597.chunk.js.map": "/checkin_app/static/js/453.7f216597.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.729cfe1e.css",
-    "static/js/main.36958917.js"
+    "static/css/main.375e9b9a.css",
+    "static/js/main.47951439.js"
   ]
 }
