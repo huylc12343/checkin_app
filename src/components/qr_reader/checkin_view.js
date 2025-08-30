@@ -1,48 +1,60 @@
 // CheckinView.jsx
 import React, { useState, useRef } from "react";
 import TicketResult from "./ticket_result";
+import TicketResult2 from "./ticket_result2";
 import QrScannerBox from "./qr_reader";
 import { Html5Qrcode } from "html5-qrcode"; // thêm import
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "https://checkin-api-ccpclk.onrender.com";
 
 export default function CheckinView() {
   const [orderCode, setOrderCode] = useState("");
   const [result, setResult] = useState(null);
   const fileInputRef = useRef(null);
 
-  async function searchTicket() {
-    if (!orderCode.trim()) {
-      setResult({ type: "error", message: "Vui lòng nhập mã vé." });
-      return;
-    }
-    setResult({ type: "info", message: "Đang tìm kiếm..." });
+async function searchTicket() {
+  if (!orderCode.trim()) {
+    setResult({ type: "error", message: "Vui lòng nhập mã vé." });
+    return;
+  }
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/ticket/${orderCode}`);
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.detail || "Có lỗi xảy ra.");
+  setResult({ type: "info", message: "Đang tìm kiếm..." });
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/find-data?key=${orderCode}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      // Nếu API trả về lỗi HTTP
+      throw new Error(data.detail || data.message || "Có lỗi xảy ra.");
+    }
+
+    if (data.found === false) {
+      // Nếu API trả về "không tìm thấy"
+      setResult({ type: "error", message: data.message || "Không tìm thấy vé." });
+    } else {
+      // Nếu tìm thấy
       setResult({ type: "ticket", data });
-    } catch (error) {
-      setResult({ type: "error", message: error.message });
     }
-  }
 
-  async function confirmCheckIn(code) {
-    setResult({ type: "info", message: "Đang xử lý check-in..." });
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/checkin`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ order_code: code }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.detail || "Không thể check-in.");
-      setResult({ type: "success", message: data.message });
-      setTimeout(searchTicket, 1000);
-    } catch (error) {
-      setResult({ type: "error", message: error.message });
-    }
+  } catch (error) {
+    setResult({ type: "error", message: error.message });
   }
+}
+
+
+async function confirmCheckIn(code) {
+  setResult({ type: "info", message: "Đang xử lý check-in..." });
+  try {
+    const response = await fetch(`${API_BASE_URL}/checkin/${code}`);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Không thể check-in.");
+    setResult({ type: "success", message: "Check-in thành công!" });
+    setTimeout(searchTicket, 1000);
+  } catch (error) {
+    setResult({ type: "error", message: error.message });
+  }
+}
+
 
   // ✅ Hàm xử lý khi người dùng chọn file ảnh
   const handleFileSelected = async (event) => {
@@ -81,7 +93,7 @@ export default function CheckinView() {
             value={orderCode}
             onChange={(e) => setOrderCode(e.target.value)}
             placeholder="Nhập mã hoặc quét"
-            className="flex-grow p-2 border border-gray-300 rounded-lg text-lg font-bold text-blue-700"
+            className="flex-grow p-2 border border-gray-300 rounded-lg text-lg font-bold text-blue-700"            
           />
           <button
             onClick={() => fileInputRef.current.click()}
@@ -108,16 +120,12 @@ export default function CheckinView() {
         Tra cứu vé
       </button>
 
-      {/* ✅ Nút xác nhận checkin */}
-      <button
-        className="w-full mt-2 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700"
-      >
-        ✅ Xác nhận Check-in
-      </button>
+
 
       {result && (
         <div className="mt-4">
           <TicketResult result={result} onCheckIn={confirmCheckIn} />
+          
         </div>
       )}
 
