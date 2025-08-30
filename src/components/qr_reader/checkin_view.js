@@ -95,6 +95,13 @@ async function confirmCheckIn(code) {
             placeholder="Nhập mã hoặc quét"
             className="flex-grow p-2 border border-gray-300 rounded-lg text-lg font-bold text-blue-700"            
           />
+              <button
+      onClick={() => setOrderCode("")}
+      className="bg-blue-500 text-white w-12 h-12 rounded-lg text-xl"
+      title="Xóa mã vé"
+    >
+      🔄
+    </button>
           <button
             onClick={() => fileInputRef.current.click()}
             className="bg-gray-600 text-white w-12 h-12 rounded-lg text-xl"
